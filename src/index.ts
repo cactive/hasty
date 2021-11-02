@@ -4,9 +4,8 @@ import { join } from 'path';
 // Methods
 import { Arbitrate, MethodOptions, set_safe } from './methods/methods';
 
-// Hasty Typings
-interface Hasty {
-    file_location: string;
+// Hasty-able (Includes database methods)
+export interface Hastyable {
 
     /**
      * Adds a number to a key in the database. Key defaults to 0 if none exists.
@@ -34,13 +33,27 @@ interface Hasty {
      * ```
      */
     subtract: (key: string, value: number, options?: MethodOptions) => null | number
-
 }
 
-// Functional and new-er constructor
+// Hasty & Table Typings
+interface Hasty extends Hastyable {
+    file_location: string;
+    Table: TableConstructor
+}
+
+interface Table extends Hastyable {
+    table_name: string;
+}
+
+// Hasty & Table Constructors
 interface HastyConstructor {
     new(file?: string): Hasty;
     (file?: string): Hasty;
+}
+
+interface TableConstructor {
+    new(table_name: string): Table;
+    (table_name: string): Table;
 }
 
 // Constructing function
@@ -48,17 +61,32 @@ const Hasty: HastyConstructor = function (this: Hasty | void, file?: string) {
 
     // Support functional constructing
     if (!(this instanceof Hasty)) return new Hasty(file);
+    const HastyThis = this;
 
     // Specify file location
-    this!.file_location = file || join(__dirname, './data.sqlite');
+    HastyThis!.file_location = file || join(__dirname, './data.sqlite');
 
     // Create database
     let database = Sqlite(this.file_location);
 
     // Add methods
-    this!.add = (key, value, options?) => Arbitrate(database, 'Add', { id: key, data: value, options });
-    this!.subtract = (key, value, options?) => Arbitrate(database, 'Subtract', { id: key, data: value, options });
+    HastyThis!.add = (key, value, options?) => Arbitrate(database, 'Add', { id: key, data: value, options });
+    HastyThis!.subtract = (key, value, options?) => Arbitrate(database, 'Subtract', { id: key, data: value, options });
+
+    // Tables
+    HastyThis.Table = function (this: Table | void, table_name: string) {
+
+        // Support functional constructing
+        if (!(this instanceof HastyThis.Table)) return new HastyThis.Table(table_name);
+        const TableThis = this;
+
+        // Specify table name
+        TableThis!.table_name = table_name;
+
+        // Add methods
+        TableThis!.add = (key, value, options?) => Arbitrate(database, 'Add', { id: key, data: value, options }, TableThis.table_name);
+        TableThis!.subtract = (key, value, options?) => Arbitrate(database, 'Subtract', { id: key, data: value, options }, TableThis.table_name);
+
+    } as TableConstructor;
 
 } as HastyConstructor;
-
-const instance = Hasty();
