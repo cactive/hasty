@@ -171,7 +171,7 @@ const Hasty: HastyConstructor = function (this: Hasty | void, file?: string) {
     const HastyThis = this;
 
     // Specify file location
-    HastyThis!.file_location = file || join(__dirname, './data.sqlite');
+    HastyThis!.file_location = file || 'data.sqlite';
 
     // Create database
     let database = Sqlite(this.file_location);
