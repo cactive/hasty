@@ -10,6 +10,8 @@ import Set from "./set";
 import Subtract from "./subtract";
 import Type from "./type";
 
+const SAFE_ECHO = false;
+
 const Methods = {
 
     Add,
@@ -43,6 +45,7 @@ export type MethodParameters = {
     data?: any
 }
 
+// Method handler
 export function Arbitrate(database: Database, method: keyof typeof Methods, _parameters: ArbitrateMethodParameters, table?: string): any {
 
     // TODO: Look into stability with '||' as apposed to '??'
@@ -55,7 +58,7 @@ export function Arbitrate(database: Database, method: keyof typeof Methods, _par
         .run();
 
     // Remove prefix
-    if (parameters.options.target && parameters.options.sub_keys !== false && parameters.options.target.includes('.')) {
+    if (parameters.options.target && parameters.options.target.includes('.') && parameters.options.sub_keys !== false) {
         parameters.options.target = parameters.options.target.slice(1);
     }
 
@@ -74,4 +77,41 @@ export function Arbitrate(database: Database, method: keyof typeof Methods, _par
     // Run the method
     return Methods[method](database, parameters, table)
 
+}
+
+// Set objects value with dot notation and creating non-existent parents
+export function set_safe(object: any, path: string, value: any): object {
+
+    if (SAFE_ECHO) console.log(`<SET_SAFE> :: IN:`, object, `, PATH:`, path, `, VALUE:`, value);
+
+    let parent = object;
+    const splits = path.split('.');
+
+    for (let i = 0; i < splits.length; i++) {
+
+        let sub_path = splits[i];
+        if (parent[sub_path] === undefined) parent[sub_path] = {};
+        if (i === splits.length - 1) parent[sub_path] = value;
+        else parent = parent[sub_path];
+
+    }
+
+    return object;
+}
+
+// Get object with dot notation
+export function get_safe(object: any, path: string): undefined | any {
+
+    if (SAFE_ECHO) console.log(`<GET_SAFE> :: IN:`, object, `, PATH:`, path);
+
+    let parent = object;
+    for (let sub_path of path.split('.')) {
+
+        if (!parent[sub_path]) return undefined;
+        parent = parent[sub_path];
+
+    }
+
+    if (SAFE_ECHO) console.log(`<GET_SAFE_RETURN> :: IN: `, object, `, PATH: `, path, `, VALUE: `, parent);
+    return parent;
 }
