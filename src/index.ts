@@ -1,5 +1,4 @@
 import Sqlite from 'better-sqlite3';
-import { join } from 'path';
 
 // Methods
 import { Arbitrate, MethodOptions } from './methods/methods';
