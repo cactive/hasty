@@ -3,7 +3,7 @@ import Add from "./add";
 import All from "./all";
 import Clear from "./clear";
 import Delete from "./delete";
-import Fetch from "./fetch";
+import Get from "./get";
 import Has from "./has";
 import Push from "./push";
 import Set from "./set";
@@ -18,7 +18,7 @@ const Methods = {
     All,
     Clear,
     Delete,
-    Fetch,
+    Get,
     Has,
     Push,
     Set,
@@ -114,4 +114,53 @@ export function get_safe(object: any, path: string): undefined | any {
 
     if (SAFE_ECHO) console.log(`<GET_SAFE_RETURN> :: IN: `, object, `, PATH: `, path, `, VALUE: `, parent);
     return parent;
+}
+
+// Get the current row value from a table, creating one if none exists
+export function get_value(database: Database, parameters: MethodParameters, table: string) {
+
+    let current_value = database
+        .prepare(`SELECT * FROM ${table} WHERE ID = (?)`)
+        .get(parameters.id);
+
+    // Create an empty row if none exists
+    if (current_value === undefined) {
+        database
+            .prepare(`INSERT INTO ${table} (ID, JSON) VALUES (?, ?)`)
+            .run(parameters.id, '{}')
+
+        // TODO: Look at simplifying duplicate code
+        current_value = database
+            .prepare(`SELECT * FROM ${table} WHERE ID = (?)`)
+            .get(parameters.id);
+
+    }
+
+    return current_value;
+
+}
+
+// Set's the current row value from a table
+export function set_value(database: Database, parameters: MethodParameters, table: string) {
+
+    // Commit changes
+    database
+        .prepare(`UPDATE ${table} SET json = (?) WHERE ID = (?)`)
+        .run(parameters.data, parameters.id);
+
+    // Get new data
+    let new_value = database
+        .prepare(`SELECT * FROM ${table} WHERE ID = (?)`)
+        .get(parameters.id)
+        .json;
+
+    if (new_value === '{}') return null;
+    new_value = JSON.parse(new_value);
+
+    // Return new value
+    if (parameters.options.target && parameters.options.sub_keys !== false) {
+        return get_safe(new_value, parameters.options.target);
+    }
+
+    return new_value;
 }
