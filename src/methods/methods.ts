@@ -116,6 +116,26 @@ export function get_safe(object: any, path: string): undefined | any {
     return parent;
 }
 
+export function delete_safe(object: any, path: string): object {
+
+    if (SAFE_ECHO) console.log(`<DELETE_SAFE> :: IN:`, object, `, PATH:`, path);
+
+    let parent = object;
+    const splits = path.split('.');
+
+    for (let i = 0; i < splits.length; i++) {
+
+        let sub_path = splits[i];
+        if (parent[sub_path] === undefined) parent[sub_path] = {};
+        if (i === splits.length - 1) delete parent[sub_path];
+        else parent = parent[sub_path];
+
+    }
+
+    return object;
+
+}
+
 // Get the current row value from a table, creating one if none exists
 export function get_value(database: Database, parameters: MethodParameters, table: string) {
 

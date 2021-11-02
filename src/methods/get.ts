@@ -1,5 +1,5 @@
 import { Database } from "better-sqlite3";
-import { get_safe, get_value, MethodParameters } from "./methods";
+import { get_safe, MethodParameters } from "./methods";
 
 export default function Fetch(database: Database, parameters: MethodParameters, table: string): any | null {
 
