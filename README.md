@@ -1,11 +1,10 @@
-
 <div align="center">
 
   <br />
   
   <p>
     <a href="https://petal.tascord.xyz">
-      <img src="https://github.com/CactiveNetwork/hasty/blob/main/docs/img/logo.png" alt="Hasty Logo" width=120 />
+      <img src="https://cactivenetwork.github.io/hasty/img/logo.png" alt="Hasty Logo" width=120 />
     </a>
     <h1>A speedy little database tool</h1>
 	<p>
@@ -24,5 +23,11 @@
   <p>
     <a href="https://nodei.co/npm/hasty.db/"><img src="https://nodei.co/npm/hasty.db.png?downloads=true&stars=true" alt="NPM Package Info" /></a>
   </p>
+
+<br />
+<br />
+<br />
+
+[ [Github](https://github.com/CactiveNetwork/hasty) / [NPM](https://npmjs.com/package/hasty) ]
 
 </div>
