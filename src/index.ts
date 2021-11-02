@@ -2,7 +2,7 @@ import Sqlite from 'better-sqlite3';
 import { join } from 'path';
 
 // Methods
-import { Arbitrate, delete_safe, MethodOptions } from './methods/methods';
+import { Arbitrate, MethodOptions } from './methods/methods';
 
 // Hasty-able (Includes database methods)
 export interface Hastyable {
@@ -10,9 +10,9 @@ export interface Hastyable {
     /**
      * Adds a number to a key in the database. Key defaults to 0 if none exists.
      * @param key Key to set, allows dot notation.
-     * @param value Amount to add to current 
+     * @param value Amount to add to current. 
      * @param options Additional method options.
-     * @returns Updated count
+     * @returns Updated count.
      * @example ```js
      * // Adds one to the store's sale count.
      * <Hasty>.set('store.sales_count', 25) 
@@ -25,9 +25,9 @@ export interface Hastyable {
      * Subtracts a number from a key in the database. Key defaults to 0 if none exists.
      * * NOTE: This function calls `add()` with a negated value
      * @param key Key to set, allows dot notation.
-     * @param value Amount to subtract from current 
+     * @param value Amount to subtract from current.
      * @param options Additional method options.
-     * @returns Updated count
+     * @returns Updated count.
      * @example ```js
      * // Subtracts one from the amount of 'cookie' inventory
      * <Hasty>.set('store.inventory.cookie_count', 10)
@@ -37,11 +37,25 @@ export interface Hastyable {
     subtract: (key: string, value: any, options?: MethodOptions) => null | number
 
     /**
+     * Appends the value to the current array value
+     * @param key Key to modify, allows dot notation.
+     * @param value Value to append.
+     * @param options Additional method options.
+     * @returns Updated count.
+     * @example ```js
+     * // Append a hitlist
+     * <Hasty>.set('hitlist.members', ['the queen of england'])
+     * <Hasty>.push('hitlist.members', 'greg') // ['the queen of england', 'greg']
+     * ```
+     */
+    push: (key: string, value: any, options?: MethodOptions) => any[] | null
+
+    /**
      * Sets the value of a key in the database.
      * @param key Key to set, allows dot notation.
-     * @param value New value
+     * @param value New value.
      * @param options Additional method options.
-     * @returns New value
+     * @returns New value.
      * @example ```js
      * // Set the starting wage of employees
      * <Hasty>.set('wages.software_developers', 100000000)
@@ -49,12 +63,11 @@ export interface Hastyable {
      */
     set: (key: string, value: number, options?: MethodOptions) => any | null
 
-
     /**
      * Fetches the value of a key in the database.
      * @param key Key to get, allows dot notation.
      * @param options Additional method options.
-     * @returns Current value
+     * @returns Current value.
      * @example ```js
      * // Get the number of stars a product has
      * <Hasty>.set('products.painkillers.stars', 150)
@@ -68,7 +81,7 @@ export interface Hastyable {
      * * NOTE: If the value is undefined, this will return true
      * @param key Key to check, allows dot notation.
      * @param options Additional method options.
-     * @returns Existence
+     * @returns Existence.
      * @example ```js
      * // Returns whether an employee exists in the organization
      * <Hasty>.set('employees.dave', { name: 'Dave', description: 'I think they work here...' })
@@ -78,10 +91,23 @@ export interface Hastyable {
     has: (key: string, options?: MethodOptions) => boolean
 
     /**
+     * Gets the type of the value at the specified key
+     * @param key Key to check, allows dot notation.
+     * @param options Additional method options.
+     * @returns Typeof value.
+     * @example ```js
+     * // Paranoia
+     * <Hasty>.set('MUST_BE_TRUE', true)
+     * <Hasty>.type('MUSE_BE_TRUE') // true
+     * ```
+     */
+    type: (key: string, options?: MethodOptions) => boolean
+
+    /**
      * Deletes a key from the database if it exists
      * @param key Key to delete, allows dot notation.
      * @param options Additional method options.
-     * @returns Deletion success
+     * @returns Deletion success.
      * @example ```js
      * // Avoid subpoena's
      * <Hasty>.set('illegal_content.tax_fraud', [...])
@@ -89,6 +115,30 @@ export interface Hastyable {
      * ```
      */
     delete: (key: string, options?: MethodOptions) => boolean
+
+    /**
+     * Lists all data store within a database
+     * @param options Additional method options.
+     * @returns Stored data.
+     * @example ```js
+     * // Check out the alphabet
+     * <Hasty>.set('the_alphabet', 'abcdefghijklmnopqrstuvwxyz')
+     * <Hasty>.all() // [ { ID: 'the_alphabet', data: 'abcdefghijklmnopqrstuvwxyz } ]
+     * ```
+     */
+    all: (options?: MethodOptions) => { ID: any, data: any }[]
+
+    /**
+     * Deletes all data held within a database
+     * @param options Additional method options.
+     * @returns Rows deleted.
+     * @example ```js
+     * // Avoid subpoena's 2.0
+     * <Hasty>.set('crimes', [ 'conspiracy to commit murder', + 1000 more ])
+     * <Hasty>.delete() // 1001
+     * ```
+     */
+    clear: (options?: MethodOptions) => number;
 
 }
 
@@ -129,10 +179,14 @@ const Hasty: HastyConstructor = function (this: Hasty | void, file?: string) {
     // Add methods
     HastyThis!.add = (key, value, options?) => Arbitrate(database, 'Add', { id: key, data: value, options });
     HastyThis!.subtract = (key, value, options?) => Arbitrate(database, 'Subtract', { id: key, data: value, options });
+    HastyThis!.push = (key, value, options?) => Arbitrate(database, 'Push', { id: key, data: value, options });
     HastyThis!.set = (key, value, options?) => Arbitrate(database, 'Set', { id: key, data: value, options });
     HastyThis!.get = (key, options?) => Arbitrate(database, 'Get', { id: key, options });
     HastyThis!.has = (key, options?) => Arbitrate(database, 'Has', { id: key, options });
+    HastyThis!.type = (key, options?) => Arbitrate(database, 'Type', { id: key, options });
     HastyThis!.delete = (key, options?) => Arbitrate(database, 'Delete', { id: key, options });
+    HastyThis!.all = (options?) => Arbitrate(database, 'All', { options });
+    HastyThis!.clear = (options?) => Arbitrate(database, 'Clear', { options });
 
     // Tables
     HastyThis.Table = function (this: Table | void, table_name: string) {
@@ -147,10 +201,14 @@ const Hasty: HastyConstructor = function (this: Hasty | void, file?: string) {
         // Add methods
         TableThis!.add = (key, value, options?) => Arbitrate(database, 'Add', { id: key, data: value, options }, TableThis.table_name);
         TableThis!.subtract = (key, value, options?) => Arbitrate(database, 'Subtract', { id: key, data: value, options }, TableThis.table_name);
+        TableThis!.push = (key, value, options?) => Arbitrate(database, 'Push', { id: key, data: value, options }, TableThis.table_name);
         TableThis!.set = (key, value, options?) => Arbitrate(database, 'Set', { id: key, data: value, options }, TableThis.table_name);
         TableThis!.get = (key, options?) => Arbitrate(database, 'Get', { id: key, options }, TableThis.table_name);
         TableThis!.has = (key, options?) => Arbitrate(database, 'Has', { id: key, options }, TableThis.table_name);
+        TableThis!.type = (key, options?) => Arbitrate(database, 'Type', { id: key, options }, TableThis.table_name);
         TableThis!.delete = (key, options?) => Arbitrate(database, 'Delete', { id: key, options }, TableThis.table_name);
+        TableThis!.all = (options?) => Arbitrate(database, 'All', { options }, TableThis.table_name);
+        TableThis!.clear = (options?) => Arbitrate(database, 'Clear', { options }, TableThis.table_name);
 
 
     } as TableConstructor;

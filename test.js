@@ -1,5 +1,6 @@
 console.clear();
 
+const Database = require("better-sqlite3");
 const Hasty = require(".");
 const { Hastyable } = require('./dist/index');
 
@@ -38,6 +39,9 @@ function Test(name, test_fn, result) {
  */
 function RunTests(Database) {
 
+    // Clear
+    Database.clear();
+
     // :: Basic Setting
     Test('Setting', () => Database.set('set_me', 10) === 10 &&
         Database.get('set_me') === 10,
@@ -63,6 +67,20 @@ function RunTests(Database) {
     // :: Item Doesn't Exist
     Database.delete('i_dont');
     Test('Item Doesn\'t Exist', () => Database.has('i_dont'), false);
+
+    // :: Pushing array
+    Database.set('array', [1, 2, 3, 4, 5]);
+    Test('Array Pushing', () => Database.push('array', 6).reduce((a, b) => a + b), 21);
+
+    // :: Type checking
+    Database.set('type', true);
+    Test('Type Checking', () => Database.type('type'), 'boolean');
+
+    // :: Fetching all
+    Test('Fetch All', () => Database.all().length, 7);
+
+    // :: Clearing
+    Test('Clearing', () => Database.clear(), 7);
 
 }
 
