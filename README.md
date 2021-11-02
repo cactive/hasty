@@ -3,7 +3,7 @@
   <br />
   
   <p>
-    <a href="https://petal.tascord.xyz">
+    <a href="https://cactivenetwork.github.io/hasty/">
       <img src="https://cactivenetwork.github.io/hasty/img/logo.png" alt="Hasty Logo" width=120 />
     </a>
     <h1>A speedy little database tool</h1>
