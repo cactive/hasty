@@ -40,7 +40,7 @@ export interface Hastyable {
      * @param key Key to modify, allows dot notation.
      * @param value Value to append.
      * @param options Additional method options.
-     * @returns Updated count.
+     * @returns Updated value.
      * @example ```js
      * // Append a hitlist
      * <Hasty>.set('hitlist.members', ['the queen of england'])
@@ -116,7 +116,7 @@ export interface Hastyable {
     delete: (key: string, options?: MethodOptions) => boolean
 
     /**
-     * Lists all data store within a database
+     * Lists all data stored within a database
      * @param options Additional method options.
      * @returns Stored data.
      * @example ```js
@@ -128,13 +128,13 @@ export interface Hastyable {
     all: (options?: MethodOptions) => { ID: any, data: any }[]
 
     /**
-     * Deletes all data held within a database
+     * Clears all data held within a database
      * @param options Additional method options.
      * @returns Rows deleted.
      * @example ```js
      * // Avoid subpoena's 2.0
      * <Hasty>.set('crimes', [ 'conspiracy to commit murder', + 1000 more ])
-     * <Hasty>.delete() // 1001
+     * <Hasty>.clear() // 1001
      * ```
      */
     clear: (options?: MethodOptions) => number;
