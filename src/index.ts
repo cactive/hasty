@@ -214,4 +214,5 @@ const Hasty: HastyConstructor = function (this: Hasty | void, file?: string) {
 
 } as HastyConstructor;
 
+module.exports = Hasty;
 export default Hasty;
