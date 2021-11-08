@@ -60,7 +60,7 @@ export interface Hastyable {
      * <Hasty>.set('wages.software_developers', 100000000)
      * ```
      */
-    set: (key: string, value: number, options?: MethodOptions) => any | null
+    set: (key: string, value: any, options?: MethodOptions) => any | null
 
     /**
      * Fetches the value of a key in the database.
