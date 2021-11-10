@@ -17,7 +17,7 @@
 <p>
     <a href="https://discord.gg/NeqVuSy"><img src="https://img.shields.io/discord/469773639437516810?color=%237289da&label=discord" alt="Discord" /></a>
     <a href="https://npmjs.com/package/hasty.db"><img src="https://img.shields.io/npm/v/hasty.db?label=hasty.db" alt="Hasty NPM Version" /></a>
-    <a href="https://npmjs.com/package/hasty.db"><img src="https://img.shields.io/npm/dm/hasty.db?label=donwloads" alt="Hasty NPM Downloads" /></a>
+    <a href="https://npmjs.com/package/hasty.db"><img src="https://img.shields.io/npm/dm/hasty.db?label=downloads" alt="Hasty NPM Downloads" /></a>
     <a href="https://cactivenetwork.github.io/hasty/"><img src="https://img.shields.io/badge/docs-v1.0.0-ff69b4" alt="Docs" /></a>
 </p>
   <p>
