@@ -8,7 +8,7 @@
     </a>
     <h1>A speedy little database tool</h1>
 	<p>
-	Hasty.db is a fast, and easy to use tool that can be used to interface with sqlite3, an incredibly fast, efficient, and complex database functional database.
+	Hasty.db is a fast, and easy to use tool that can be used to interface with sqlite3, an incredibly fast, efficient, and complex functional databases.
 	</p>
   </p>
   
