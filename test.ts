@@ -1,10 +1,7 @@
-console.clear();
+import Hasty, { Hastyable } from ".";
 
-const Hasty = require(".");
-const { Hastyable } = require('./dist/index');
-
-let history = [];
-function Test(name, test_fn, result) {
+let history: string[] = [];
+function Test(name: string, test_fn: Function, result: any) {
 
     const update_stdout = () => {
         console.clear();
@@ -33,10 +30,7 @@ function Test(name, test_fn, result) {
 
 }
 
-/**
- * @param {Hastyable} Database 
- */
-function RunTests(Database) {
+function RunTests(Database: Hastyable) {
 
     // Clear
     Database.clear();
@@ -69,7 +63,7 @@ function RunTests(Database) {
 
     // :: Pushing array
     Database.set('array', [1, 2, 3, 4, 5]);
-    Test('Array Pushing', () => Database.push('array', 6).reduce((a, b) => a + b), 21);
+    Test('Array Pushing', () => Database.push('array', 6)!.reduce((a, b) => a + b), 21);
 
     // :: Type checking
     Database.set('type', true);
@@ -84,9 +78,9 @@ function RunTests(Database) {
 }
 
 // Run tests with database
-history.push(`\n[ ## STARTING DATABASE TESTS (JS) ## ]`)
+history.push(`\n[ ## STARTING DATABASE TESTS (TS) ## ]`)
 RunTests(Hasty());
 
 // Run tests with table
-history.push(`\n[ ## STARTING TABLE TESTS (JS) ## ]`)
+history.push(`\n[ ## STARTING TABLE TESTS (TS) ## ]`)
 RunTests(Hasty().Table('tests'));

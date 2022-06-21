@@ -1,4 +1,4 @@
-const Hasty = require('.');
+const { Hasty } = require('.');
 
 const Database = Hasty();
 
