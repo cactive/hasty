@@ -142,22 +142,22 @@ export interface Hastyable {
 }
 
 // Hasty & Table Typings
-interface Hasty extends Hastyable {
+export interface Hasty extends Hastyable {
     file_location: string;
     Table: TableConstructor
 }
 
-interface Table extends Hastyable {
+export interface Table extends Hastyable {
     table_name: string;
 }
 
 // Hasty & Table Constructors
-interface HastyConstructor {
+export interface HastyConstructor {
     new(file?: string): Hasty;
     (file?: string): Hasty;
 }
 
-interface TableConstructor {
+export interface TableConstructor {
     new(table_name: string): Table;
     (table_name: string): Table;
 }
